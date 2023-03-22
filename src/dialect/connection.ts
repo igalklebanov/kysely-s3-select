@@ -55,19 +55,22 @@ export class S3SelectConnection implements DatabaseConnection {
     const {contentType} = this.#config
 
     switch (contentType) {
-      case 'csv':
+      case 'csv': {
+        const {csvOptions} = this.#config
+
         return {
           ...inputSerialization,
           CSV: {
-            AllowQuotedRecordDelimiter: Boolean(this.#config.csvOptions?.allowQuotedRecordDelimiter),
-            Comments: this.#config.csvOptions?.comments || '#',
-            FieldDelimiter: this.#config.csvOptions?.fieldDelimiter || ',',
-            FileHeaderInfo: this.#config.csvOptions?.fileHeaderInfo?.toUpperCase() || 'USE',
-            QuoteCharacter: this.#config.csvOptions?.quoteCharacter || '"',
-            QuoteEscapeCharacter: this.#config.csvOptions?.quoteEscapeCharacter || '"',
-            RecordDelimiter: this.#config.csvOptions?.recordDelimiter,
+            AllowQuotedRecordDelimiter: Boolean(csvOptions?.allowQuotedRecordDelimiter),
+            Comments: csvOptions?.comments || '#',
+            FieldDelimiter: csvOptions?.fieldDelimiter || ',',
+            FileHeaderInfo: csvOptions?.fileHeaderInfo?.toUpperCase() || 'USE',
+            QuoteCharacter: csvOptions?.quoteCharacter || '"',
+            QuoteEscapeCharacter: csvOptions?.quoteEscapeCharacter || '"',
+            RecordDelimiter: csvOptions?.recordDelimiter,
           },
         }
+      }
       case 'json':
         return {
           ...inputSerialization,
