@@ -1,5 +1,7 @@
-import {DatabaseConnection, Driver, TransactionSettings} from 'kysely'
+import type {DatabaseConnection, Driver} from 'kysely'
 
+import {S3SelectConnection} from './connection.js'
+import {S3SelectTransactionsUnsupportedError} from './errors.js'
 import type {S3SelectDialectConfig} from './types.js'
 
 export class S3SelectDriver implements Driver {
@@ -9,31 +11,35 @@ export class S3SelectDriver implements Driver {
     this.#config = config
   }
 
-  init(): Promise<void> {
-    throw new Error('Method not implemented.')
+  async init(): Promise<void> {
+    // noop
   }
 
-  acquireConnection(): Promise<DatabaseConnection> {
-    throw new Error('Method not implemented.')
+  async acquireConnection(): Promise<DatabaseConnection> {
+    return new S3SelectConnection(this.#config)
   }
 
-  beginTransaction(connection: DatabaseConnection, settings: TransactionSettings): Promise<void> {
-    throw new Error('Method not implemented.')
+  beginTransaction(_: DatabaseConnection): Promise<void> {
+    this.#throwTransactionsError()
   }
 
-  commitTransaction(connection: DatabaseConnection): Promise<void> {
-    throw new Error('Method not implemented.')
+  commitTransaction(_: DatabaseConnection): Promise<void> {
+    this.#throwTransactionsError()
   }
 
-  rollbackTransaction(connection: DatabaseConnection): Promise<void> {
-    throw new Error('Method not implemented.')
+  rollbackTransaction(_: DatabaseConnection): Promise<void> {
+    this.#throwTransactionsError()
   }
 
-  releaseConnection(connection: DatabaseConnection): Promise<void> {
-    throw new Error('Method not implemented.')
+  async releaseConnection(_: DatabaseConnection): Promise<void> {
+    // noop
   }
 
-  destroy(): Promise<void> {
-    throw new Error('Method not implemented.')
+  async destroy(): Promise<void> {
+    // noop
+  }
+
+  #throwTransactionsError(): never {
+    throw new S3SelectTransactionsUnsupportedError()
   }
 }

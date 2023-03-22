@@ -1,4 +1,4 @@
-import {DatabaseIntrospector, Dialect, DialectAdapter, Driver, Kysely, QueryCompiler} from 'kysely'
+import type {DatabaseIntrospector, Dialect, DialectAdapter, Driver, Kysely, QueryCompiler} from 'kysely'
 
 import {S3SelectAdapter} from './adapter.js'
 import {S3SelectDriver} from './driver.js'
