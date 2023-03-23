@@ -36,7 +36,9 @@ export class S3SelectConnection implements DatabaseConnection {
 
     for await (const {Records} of Payload) {
       if (Records) {
-        stringifiedOutputs.push(textDecoder.decode(Records.Payload))
+        const decodedText = textDecoder.decode(Records.Payload)
+
+        stringifiedOutputs.push(decodedText)
       }
     }
 
@@ -67,7 +69,7 @@ export class S3SelectConnection implements DatabaseConnection {
             FileHeaderInfo: csvOptions?.fileHeaderInfo?.toUpperCase() || 'USE',
             QuoteCharacter: csvOptions?.quoteCharacter || '"',
             QuoteEscapeCharacter: csvOptions?.quoteEscapeCharacter || '"',
-            RecordDelimiter: csvOptions?.recordDelimiter,
+            RecordDelimiter: csvOptions?.recordDelimiter || '\n',
           },
         }
       }

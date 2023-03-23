@@ -1,86 +1,85 @@
-import {
-  CreateBucketCommand,
-  DeleteBucketCommand,
-  DeleteObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from '@aws-sdk/client-s3'
+import {S3Client} from '@aws-sdk/client-s3'
 import {Kysely} from 'kysely'
-import {readFileSync} from 'node:fs'
-import {join} from 'node:path'
 
 import {S3SelectDialect} from '../../src/dialect/dialect.js'
 
-export interface PokemonRow {
-  id: number
-  name: string
-  customName: string
-  type: string
-  level: number
-  generation: number
+export interface Condition {
+  START: string
+  STOP: string
+  PATIENT: string
+  CODE: string
+  DESCRIPTION: string
 }
 
-export interface Database {
-  S3Object: PokemonRow
+export interface CSVDatabase {
+  S3Object: Condition
 }
 
-export interface TestContext {
-  db: Kysely<Database>
+export interface Bundle {
+  resourceType: 'Bundle'
+  type: 'transaction'
+  entry: Entry[]
 }
+
+export interface Entry {
+  fullUrl: string
+  resource: Patient
+  request: object
+}
+
+export interface Patient {
+  resourceType: 'Patient'
+  id: string
+  meta: object
+  text: object
+  extension: object[]
+  identifier: object[]
+  name: {
+    use: 'official'
+    family: string
+    given: string[]
+    prefix: string[]
+  }[]
+  telecom: object[]
+  gender: 'male' | 'female'
+  birthDate: string
+  deceasedDateTime: string
+  address: object[]
+  maritalStatus: object
+  multipleBirthBoolean: boolean
+  communication: object[]
+}
+
+export interface JSONDatabase {
+  S3Object: Bundle
+}
+
+export type TestContext = Awaited<ReturnType<typeof initTest>>
 
 const client = new S3Client({
-  endpoint: 'http://127.0.0.1:4566',
+  region: 'us-east-1',
 })
-const BUCKET_NAME = 'test-bucket'
-const FILE_NAME = 'pokemons.csv'
+const BUCKET = 'synthea-open-data'
+const KEY_CSV = 'coherent/unzipped/csv/conditions.csv'
+const KEY_JSON = 'coherent/unzipped/fhir/Abe604_Frami345_b8dd1798-beef-094d-1be4-f90ee0e6b7d5.json'
 
-export async function up(): Promise<TestContext> {
-  await createBucket()
-  await uploadFiles()
-
+export async function initTest() {
   return {
-    db: new Kysely<Database>({
+    csv: new Kysely<CSVDatabase>({
       dialect: new S3SelectDialect({
-        bucket: BUCKET_NAME,
+        bucket: BUCKET,
         client,
-        compressionType: 'none',
         contentType: 'csv',
-        csvOptions: {
-          fieldDelimiter: ',',
-          fileHeaderInfo: 'use',
-          quoteCharacter: '"',
-          recordDelimiter: '\n',
-        },
-        key: FILE_NAME,
+        key: KEY_CSV,
+      }),
+    }),
+    json: new Kysely<JSONDatabase>({
+      dialect: new S3SelectDialect({
+        bucket: BUCKET,
+        client,
+        contentType: 'json',
+        key: KEY_JSON,
       }),
     }),
   }
-}
-
-export async function down(): Promise<void> {
-  await deleteFiles()
-  await deleteBucket()
-}
-
-async function createBucket(): Promise<void> {
-  await client.send(new CreateBucketCommand({Bucket: BUCKET_NAME}))
-}
-
-async function deleteBucket(): Promise<void> {
-  await client.send(new DeleteBucketCommand({Bucket: BUCKET_NAME}))
-}
-
-async function deleteFiles(): Promise<void> {
-  await client.send(new DeleteObjectCommand({Bucket: BUCKET_NAME, Key: FILE_NAME}))
-}
-
-async function uploadFiles(): Promise<void> {
-  await client.send(
-    new PutObjectCommand({
-      Body: readFileSync(join(__dirname, 'pokemons.csv')),
-      Bucket: BUCKET_NAME,
-      ContentType: 'text/csv',
-      Key: FILE_NAME,
-    }),
-  )
 }
