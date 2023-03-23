@@ -1,4 +1,4 @@
-# kysely-surrealdb
+# kysely-s3-select
 
 ![Powered by TypeScript](https://img.shields.io/badge/powered%20by-typescript-blue.svg)
 
