@@ -142,7 +142,7 @@ const patientBundle = new Kysely<PatientBundleJSON>({
     }),
     contentType: 'json', // one of 'csv' | 'json' | 'parquet'
     // jsonOptions: { // optional
-    //   allowQuotedRecordDelimiter: false, // optional
+    //   type: 'document', // optional, one of 'document' | 'lines'
     // },
     key: 'coherent/unzipped/fhir/Abe604_Frami345_b8dd1798-beef-094d-1be4-f90ee0e6b7d5.json',
   })
