@@ -1,6 +1,6 @@
 {
   "name": "kysely-s3-select",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Kysely dialect, plugins and other goodies for Amazon S3 Select",
   "repository": "https://github.com/igalklebanov/kysely-s3-select.git",
   "homepage": "https://github.com/igalklebanov/kysely-s3-select",
