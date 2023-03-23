@@ -34,7 +34,7 @@ pnpm add kysely-s3-select kysely @aws-sdk/client-s3
 
 ### Deno
 
-The package was not tested in Deno, aws-sdk-v3 could might not be supported.
+This package was not tested in Deno, aws-sdk-v3 might not be supported.
 
 This package uses/extends some [Kysely](https://github.com/koskimas/kysely) types and classes, which are imported using its NPM package name -- not a relative file path or CDN url.
 
