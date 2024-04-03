@@ -44,7 +44,7 @@
     "@aws-sdk/client-s3": "^3.296.0",
     "@tsconfig/node18": "^1.0.1",
     "@types/chai": "^4.3.4",
-    "@types/chai-as-promised": "^7.1.5",
+    "@types/chai-as-promised": "^7.1.8",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.5",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
