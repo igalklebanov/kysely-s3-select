@@ -1,5 +1,7 @@
 # kysely-s3-select
 
+[AWS has killed the S3 Select service](https://horovits.medium.com/disruption-ahead-aws-quietly-axing-services-033e7518eefb) so this project will not receive any future updates. Feel free to fork it.
+
 ![Powered by TypeScript](https://img.shields.io/badge/powered%20by-typescript-blue.svg)
 
 [Kysely](https://github.com/koskimas/kysely) dialects, plugins and other goodies for [Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html).
